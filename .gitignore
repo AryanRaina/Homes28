@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+abcd.py
+
+/config/homes28-79a97-firebase-adminsdk-fbsvc-b023f7f377.json
+
