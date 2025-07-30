@@ -2,15 +2,27 @@
 
 import GoogleAddressSearch from '@/app/_components/GoogleAddressSearch'
 import { Button } from '@/components/ui/button'
+import { Loader } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import { toast } from 'sonner'
 
 
 function AddNewListing() {
     const [selectedAddress,setSelectedAddress] = useState();
     const [coordinates,setCoordinates] = useState();
+    const [loader, setLoader] = useState(false);
+    const router = useRouter();
 
     const nextHandler=()=>{
+        setLoader(true)
         console.log(selectedAddress,coordinates);
+
+      if(true){
+          setLoader(false)
+          toast("New Address added for listing");
+          router.replace('/edit-listing/'+0);// change according to database
+      }
     }
     return (
         <div className='mt-10 md:mx-56 lg:mx-80'>
@@ -25,7 +37,7 @@ function AddNewListing() {
                     <Button
                         disabled={!selectedAddress || !coordinates}
                         onClick={nextHandler}>
-                        Next
+                        {loader?<Loader className='animate-spin' />:'Next'}
                     </Button>
                 </div>
             </div>

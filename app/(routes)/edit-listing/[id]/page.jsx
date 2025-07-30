@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
@@ -13,18 +13,61 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from '@/components/ui/button'
 import { Formik } from 'formik'
+import { usePathname } from 'next/navigation'
+import { toast } from 'sonner'
+import userAuthStatus from '@/utils/authStatus'
+import { useRouter } from 'next/navigation'
 
 function EditListing() {
+
+    const params = usePathname();
+    const [user, setUser] = useState("");
+    const router = useRouter();
+
+    async function fetchUser(){
+        userAuthStatus().then(({email, authenticated}) => {
+            if(!authenticated){
+                router.push("/auth/login");
+            } else {
+                setUser(email);
+            }
+        });
+    }
+
+    useEffect(()=>{
+        fetchUser();
+        console.log(params.split('/')[2])
+    },[]);
+
+    const verifyUserRecord=()=>{
+        //verify user from backend
+    }
+
+    const onSubmitHandler = async(formValue)=>{
+        //Database
+        toast('Listing Updated and Published')
+    }
+
     return (
         <div className='px-10 md:px-36 my-10'>
             <h2 className='font-bold text-2xl p-8'>Enter some more details about your Listing</h2>
         <Formik
         initialValues={{
-            type:'Rent',
-            propertyType:''
+            type:'',
+            propertyType:'',
+            bedroom:0,
+            bathroom:0,
+            builtIn:0,
+            parking:0,
+            lotSize:0,
+            area:0,
+            sellingPrice:0,
+            hoa:0,
+            description:''
         }}
         onSubmit={(values)=>{
             console.log(values);
+            onSubmitHandler(values)
         }}>
             {({
                 values,
@@ -36,7 +79,7 @@ function EditListing() {
                 <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-10 p-6 py-20px'>
                     <div className='flex flex-col gap-2'>
                         <h2 className='text-lg text-slate-500'>Rent or Sale?</h2>
-                        <RadioGroup defaultValue="Rent" className={"flex pt-2"}
+                        <RadioGroup defaultValue="Rent" className={"flex pt-2"} name = "type"
                         onValueChange={(v)=>values.type=v}>
                             <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="Rent" id="Rent" />
@@ -75,8 +118,8 @@ function EditListing() {
                         onChange = {handleChange}/>
                     </div>
                     <div className='flex gap-2 flex-col'>
-                        <h2 className='text-gray-500'>Built In Area</h2>
-                        <Input type="number" placeholder="Ex.1800 Sq.ft" name="builtInArea" 
+                        <h2 className='text-gray-500'>Built In</h2>
+                        <Input type="number" placeholder="Ex.2022" name="builtIn" 
                         onChange = {handleChange}/>
                     </div>
                 </div>
@@ -117,8 +160,7 @@ function EditListing() {
                     </div>
                 </div>
                 <div className='flex gap-7 justify-end'>
-                    <Button variant="outline" className="border-orange-600 text-orange-600 cursor-pointer hover:text-white hover:bg-primary "> Save </Button>
-                    <Button className="cursor-pointer"> Save & Publish</Button>
+                    <Button className="cursor-pointer" type="submit"> Publish</Button>
                 </div>
             </div>
             </form>)}
