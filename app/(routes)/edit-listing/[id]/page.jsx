@@ -53,7 +53,7 @@ function EditListing() {
             <h2 className='font-bold text-2xl p-8'>Enter some more details about your Listing</h2>
         <Formik
         initialValues={{
-            type:'',
+            type:'Rent',
             propertyType:'',
             bedroom:0,
             bathroom:0,
